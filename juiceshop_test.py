@@ -1,6 +1,7 @@
 import unittest
 import requests
 import logging
+import socket
 # Here is a new comment.
 
 
@@ -19,7 +20,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertEqual(response.text, "Invalid email or password.")
 
     def test_authorization_bypass(self):
-        url = "http://localhost:3000"
+        url = "http://localhost:3000/rest/user/login"
         admin_credentials = {
             "email": "admin@juice-sh.op",
             "password": "admin123"
