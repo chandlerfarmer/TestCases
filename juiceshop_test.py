@@ -20,19 +20,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_authorization_bypass(self):
         
-
-        admin_credentials = { 
-            "email": "admin@juice-sh.op",
-            "password": "admin123"
-        }
-        normal_user_credentials = { # Normal User Credentials For Test
-            "email": "cys444@gmail.com",
-            "password": "tester"
-        }
-
-        normal_user_basketID = '8' # Shopping Basket Id of Normal User
-
-
         admin_payload = { # Admin Payload To Add Item to Shopping Basket
             "BasketId": '1',
             "ProductId": '1', 
@@ -40,29 +27,38 @@ class TestOWASPJuiceShop(unittest.TestCase):
             }
         
 
-        login_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "admin@juice-sh.op","password": "admin123"})
-        token = login_response.json()['authentication']['token']
+        adminlogin_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "admin@juice-sh.op","password": "admin123" }) # Log in as the admin
+        adminToken = adminlogin_response.json()['authentication']['token'] # Capture the access token
         
-        headers = {
-            "Authorization": "Bearer " + token,
-            "User-Agent": str(login_response.request.headers.get('User-Agent')),
+        adminHeaders = { # Set the request headers for the next API call
+            "Authorization": "Bearer " + adminToken,
+            "User-Agent": str(adminlogin_response.request.headers.get('User-Agent')),
             "Accept": "application/json",
             "Accept-Language": "en-us",
             "Content-Type": "application/json"
         }
 
-        modifyBasket_response = requests.post("http://localhost:3000/api/BasketItems/", headers=headers, json=admin_payload)
-        print("SHOULDVE ADDED\n")
+
+
+        modifyBasket_response = requests.post("http://localhost:3000/api/BasketItems/", headers=adminHeaders, json=admin_payload) # API request to add an item to the admins basket
         print(modifyBasket_response._content)
         
-        # Log in as normal user and access admin's basket
-        requests.post(loginURL, data=normal_user_credentials)
-        basket_id = session.get(url+"/rest/basket/" + admin_user_basketID)
-        headers = {
-            "Authorization": session.cookies.get_dict()["token"]
+
+        userlogin_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "cys444@gmail.com","password": "tester" })
+        userToken = userlogin_response.json()['authentication']['token'] # Capture the access token
+
+        userHeaders = {
+            "Authorization": "Bearer " + userToken,
+            "User-Agent": str(userlogin_response.request.headers.get('User-Agent')),
+            "Accept": "application/json",
+            "Accept-Language": "en-us",
+            "Content-Type": "application/json"
         }
-        response = requests.get(url+f"/rest/basket/{basket_id}", headers=headers)
-        self.assertEqual(response.status_code, 403)
+
+
+        getBasket_response = requests.get("http://localhost:3000/rest/basket/1", headers=userHeaders)
+
+        self.assertNotEqual(getBasket_response.status_code, 200)
 
     def test_weak_password_requirements(self):
         url = "http://localhost:3000"
