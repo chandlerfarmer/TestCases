@@ -44,7 +44,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         token = login_response.json()['authentication']['token']
         
         headers = {
-            "Authorization": token,
+            "Authorization": "Bearer " + token,
             "User-Agent": str(login_response.request.headers.get('User-Agent')),
             "Accept": "application/json",
             "Accept-Language": "en-us",
