@@ -1,7 +1,6 @@
 import unittest
 import requests
-import logging
-import socket
+from selenium import webdriver
 # Here is a new comment.
 
 
@@ -19,30 +18,42 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 200)
         self.assertEqual(response.text, "Invalid email or password.")
 
+
     def test_authorization_bypass(self):
-        url = "http://localhost:3000"
-        loginURL = "http://localhost:3000/rest/user/login"
-        admin_credentials = {
+        
+        url = "http://localhost:3000" # BASE URL
+        loginURL = "http://localhost:3000/rest/user/login" # Juice Shop Login URL
+
+        admin_credentials = { # Admin Credentials For Test
             "email": "admin@juice-sh.op",
             "password": "admin123"
         }
-        normal_user_credentials = {
+        normal_user_credentials = { # Normal User Credentials For Test
             "email": "cys444@gmail.com",
             "password": "tester"
         }
 
-        normal_user_basketID = '8' # Set Value to basketID of normal user
-        admin_user_basketID = '1'  # Set Value to basketID of admin
-        admin_payload = {
+        normal_user_basketID = '8' # Shopping Basket Id of Normal User
+        admin_user_basketID = '1'  # Shopping Basket Id of Admin User
+
+        admin_payload = { # Admin Payload To Add Item to Shopping Basket
             "BasketId" :admin_user_basketID,
             "ProductId": '24', 
             "quantity": '1'
             }
+        
 
-        # Log in as admin and add product to basket
         session = requests.Session()
-        session.post(loginURL, data=admin_credentials)
-        session.post(url+f"/api/BasketItems/", data=admin_payload)
+        session.post(loginURL, data=admin_credentials) # Login as Admin
+        
+        headers = {
+            "Accept": "application/json",
+            "Accept-Language": "en-US",
+            "Cookie": session.cookies.get_dict(),
+            "Authorization": session.headers.get('Authorization')
+        }
+
+        session.post(url+f"/api/BasketItems/", headers=headers, data=admin_payload)
         # TESTING TILL HERE
         
         # Log in as normal user and access admin's basket
