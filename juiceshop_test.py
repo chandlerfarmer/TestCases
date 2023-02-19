@@ -53,7 +53,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
 
         session.post(url+f"/api/BasketItems/", headers=headers, json=admin_payload)
-        # TESTING TILL HERE
+        print('Made it past POST BLOCK')
         
         # Log in as normal user and access admin's basket
         session.post(loginURL, data=normal_user_credentials)
