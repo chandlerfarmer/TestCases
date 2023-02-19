@@ -79,4 +79,4 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 200)
 
 
-test1 = TestOWASPJuiceShop("runTest").test_sql_injection()
+test1 = TestOWASPJuiceShop().test_sql_injection()
