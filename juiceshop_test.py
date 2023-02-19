@@ -21,7 +21,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_authorization_bypass(self):
         
 
-        admin_credentials = { # Admin Credentials For Test
+        admin_credentials = { 
             "email": "admin@juice-sh.op",
             "password": "admin123"
         }
@@ -40,10 +40,11 @@ class TestOWASPJuiceShop(unittest.TestCase):
             }
         
 
-        login_response = requests.post("http://localhost:3000/rest/user/login", data=admin_credentials) # Login as Admin
-        login_response_json = login_response.json()
+        login_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "admin@juice-sh.op","password": "admin123"})
+        login_response_json = login_response.json(['authentication']['token'])
+        print("testing this bitch", login_response_json)
+        
         headers = {
-            "Cookie": str(login_response.cookies.get('Cookie')),
             "Authorization": login_response_json['authentication']['token'],
             "User-Agent": str(login_response.request.headers.get('User-Agent')),
             "Accept": "application/json",
