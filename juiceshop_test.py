@@ -14,7 +14,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "email": email,
             "password": password
         }
-        response = requests.post(url+"/rest/user/login", data=payload)
+        response = requests.post(url+"/#/login", data=payload)
         self.assertNotEqual(response.status_code, 200)
         self.assertEqual(response.text, "Invalid email or password.")
 
@@ -79,4 +79,5 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 200)
 
 
-test1 = TestOWASPJuiceShop().test_sql_injection()
+if __name__ == '__main__':
+    unittest.main()
