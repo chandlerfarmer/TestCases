@@ -33,11 +33,11 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
 
         normal_user_basketID = '8' # Shopping Basket Id of Normal User
-        admin_user_basketID = '1'  # Shopping Basket Id of Admin User
+
 
         admin_payload = { # Admin Payload To Add Item to Shopping Basket
-            "BasketId" :admin_user_basketID,
-            "ProductId": '24', 
+            "BasketId": '1',
+            "ProductId": '1', 
             "quantity": '1'
             }
         
