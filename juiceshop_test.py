@@ -52,7 +52,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
 
         modifyBasket_response = requests.post("http://localhost:3000/api/BasketItems/", headers=headers, json=admin_payload)
-        print('Made it past POST BLOCK')
+        print(modifyBasket_response.content)
         
         # Log in as normal user and access admin's basket
         requests.post(loginURL, data=normal_user_credentials)
