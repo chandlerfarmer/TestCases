@@ -44,7 +44,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         
         headers = {
             "Cookie": str(login_response.cookies.get('Cookie')),
-            "Authorization": str(login_response.request.headers.get('token')),
+            "Authorization": str(login_response.headers.get('token')),
             "User-Agent": str(login_response.request.headers.get('User-Agent')),
             "Accept": "application/json",
             "Accept-Language": "en-us",
