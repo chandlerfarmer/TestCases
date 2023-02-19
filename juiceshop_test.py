@@ -52,7 +52,8 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
 
         modifyBasket_response = requests.post("http://localhost:3000/api/BasketItems/", headers=headers, json=admin_payload)
-        print("SHOULDVE ADDED")
+        print("SHOULDVE ADDED\n")
+        print(modifyBasket_response._content)
         
         # Log in as normal user and access admin's basket
         requests.post(loginURL, data=normal_user_credentials)
