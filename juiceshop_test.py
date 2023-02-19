@@ -33,7 +33,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
         normal_user_basketID = '8' # Set Value to basketID of normal user
         admin_user_basketID = '1'  # Set Value to basketID of admin
-        data = {"BasketId:8", "ProductId: 24", "quantity: 1"}
+        data = {"BasketId:8, ProductId: 24, quantity: 1"}
 
         # Log in as admin and add product to basket
         session = requests.Session()
