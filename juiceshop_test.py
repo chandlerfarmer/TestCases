@@ -16,6 +16,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         response = requests.post(url+"/rest/user/login", data=payload)
         self.assertNotEqual(response.status_code, 200)
         self.assertEqual(response.text, "Invalid email or password.")
+        response.close()
 
 
     def test_authorization_bypass(self):
@@ -46,7 +47,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
         userlogin_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "cys444@gmail.com","password": "tester" })
         userToken = userlogin_response.json()['authentication']['token'] # Capture the access token
-
+        userlogin_response.close()
         userHeaders = {
             "Authorization": "Bearer " + userToken,
             "User-Agent": str(userlogin_response.request.headers.get('User-Agent')),
@@ -60,6 +61,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         print("Confirm contet : ", getBasket_response.content())
 
         self.assertNotEqual(getBasket_response.status_code, 200)
+        getBasket_response.close()
 
     def test_weak_password_requirements(self):
         url = "http://localhost:3000"
