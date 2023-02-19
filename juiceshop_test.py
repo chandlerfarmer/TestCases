@@ -42,7 +42,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
         login_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "admin@juice-sh.op","password": "admin123"})
         token = login_response.json()['authentication']['token']
-        cookie = login_response.cookies.get('Cookie')
+        cookie = login_response.cookies.get('continueCode')
         print("testing this bitch", token)
         print('testin mf cookie', cookie)
         
