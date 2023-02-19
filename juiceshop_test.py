@@ -45,14 +45,14 @@ class TestOWASPJuiceShop(unittest.TestCase):
         session = requests.Session()
         session.post(loginURL, data=admin_credentials) # Login as Admin
         
+        cookie = str(session.cookies.get_dict())
+        authorization = str(session.headers.get('Authorization'))
         headers = {
-            "Accept": "application/json",
-            "Accept-Language": "en-US",
-            "Cookie": session.cookies.get_dict(),
-            "Authorization": session.headers.get('Authorization')
+            "Cookie": cookie,
+            "Authorization": authorization
         }
 
-        session.post(url+f"/api/BasketItems/", headers=headers, data=admin_payload)
+        session.post(url+f"/api/BasketItems/", headers=headers, json=admin_payload)
         # TESTING TILL HERE
         
         # Log in as normal user and access admin's basket
