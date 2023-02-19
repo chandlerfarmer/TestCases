@@ -37,7 +37,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "Accept-Language": "en-us",
             "Content-Type": "application/json"
         }
-        
+
         requests.post("http://localhost:3000/api/BasketItems/", headers=adminHeaders, json=admin_payload) # API request to add an item to the admins basket
         
 
@@ -57,15 +57,20 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(getBasket_response.status_code, 200)
 
     def test_weak_password_requirements(self):
-        url = "http://localhost:3000"
+        url = "http://localhost:3000/api/Users/"
         payload = {
             "email": "test@test.com",
             "password": "12345",
-            "securityQuestion": "Question",
-            "securityAnswer": "Answer"
+            "passwordRepeat": "12345",
+            "securityAnswer": "mom",
+            "securityQuestion": {
+                "id": "2",
+                "question": "Mother's maiden name?"
+            }
         }
-        response = requests.post(url+"/rest/user/register", data=payload)
-        self.assertNotEqual(response.status_code, 200)
+        response = requests.post(url, data=payload)
+        print('Content is:\n', response.content)
+        self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
         url = "http://localhost:3000"
