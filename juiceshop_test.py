@@ -1,6 +1,5 @@
 import unittest
 import requests
-from selenium import webdriver
 # Here is a new comment.
 
 
