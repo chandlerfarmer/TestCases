@@ -20,24 +20,29 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertEqual(response.text, "Invalid email or password.")
 
     def test_authorization_bypass(self):
-        url = "http://localhost:3000/rest/user/login"
+        url = "http://localhost:3000"
+        loginURL = "http://localhost:3000/rest/user/login"
         admin_credentials = {
             "email": "admin@juice-sh.op",
             "password": "admin123"
         }
         normal_user_credentials = {
-            "email": "normal@user.com",
-            "password": "password"
+            "email": "cys444@gmail.com",
+            "password": "tester"
         }
+
+        normal_user_basketID = '8' # Set Value to basketID of normal user
+
+        data = {"BasketId:8", "ProductId: 24", "quantity: 1"}
+
         # Log in as admin and add product to basket
         session = requests.Session()
-        session.post(url+"/rest/user/login", data=admin_credentials)
-        product = session.get(url+"/api/products").json()[0]
-        session.put(url+f"/api/BasketItems/{product['id']}")
-        session.post(url+"/rest/user/logout")
+        session.post(loginURL, data=admin_credentials)
+        session.post(url+f"/api/BasketItems/", data=data)
+        
         # Log in as normal user and access admin's basket
-        session.post(url+"/rest/user/login", data=normal_user_credentials)
-        basket_id = session.get(url+"/rest/basket").json()["id"]
+        session.post(loginURL, data=normal_user_credentials)
+        basket_id = session.get(url+"/rest/basket/" + normal_user_basketID)
         headers = {
             "Authorization": session.cookies.get_dict()["token"]
         }
