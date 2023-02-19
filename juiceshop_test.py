@@ -41,7 +41,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
 
         modifyBasket_response = requests.post("http://localhost:3000/api/BasketItems/", headers=adminHeaders, json=admin_payload) # API request to add an item to the admins basket
-        print(modifyBasket_response._content)
+        print("Content consists of ", modifyBasket_response._content)
         
 
         userlogin_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "cys444@gmail.com","password": "tester" })
