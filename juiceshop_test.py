@@ -41,7 +41,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         
 
         login_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "admin@juice-sh.op","password": "admin123"})
-        login_response_json = login_response.json(['authentication']['token'])
+        login_response_json = login_response.json()['authentication']['token']
         print("testing this bitch", login_response_json)
         
         headers = {
