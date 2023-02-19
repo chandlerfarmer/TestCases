@@ -14,8 +14,10 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "email": email,
             "password": password
         }
+        print("YEAJJJJJJJJJHHHHHHHHHHHHHHHHH")
         response = requests.post(url+"/#/login", data=payload)
         self.assertNotEqual(response.status_code, 200)
+        print("YEA@222222222222222222222222222222222222222")
         self.assertEqual(response.text, "Invalid email or password.")
 
     def test_authorization_bypass(self):
