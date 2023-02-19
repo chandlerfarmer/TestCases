@@ -42,13 +42,9 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
         login_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "admin@juice-sh.op","password": "admin123"})
         token = login_response.json()['authentication']['token']
-        cookie = login_response.cookies.get('continueCode')
-        print("testing this bitch", token)
-        print('testin mf cookie', cookie)
         
         headers = {
             "Authorization": token,
-            "Cookie": login_response.cookies.get('token'),
             "User-Agent": str(login_response.request.headers.get('User-Agent')),
             "Accept": "application/json",
             "Accept-Language": "en-us",
@@ -56,8 +52,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
 
         modifyBasket_response = requests.post("http://localhost:3000/api/BasketItems/", headers=headers, json=admin_payload)
-        print(headers)
-        print(modifyBasket_response.content)
+        print("SHOULDVE ADDED")
         
         # Log in as normal user and access admin's basket
         requests.post(loginURL, data=normal_user_credentials)
