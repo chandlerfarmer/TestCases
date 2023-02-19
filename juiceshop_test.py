@@ -1,5 +1,6 @@
 import unittest
 import requests
+import logging
 # Here is a new comment.
 
 
@@ -76,3 +77,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
         product_id = session.get(url+"/api/products").json()[0]["id"]
         response = session.put(url+f"/api/BasketItems/{product_id}", json={"quantity": -10})
         self.assertNotEqual(response.status_code, 200)
+
+
+test1 = TestOWASPJuiceShop("runTest").test_sql_injection()
