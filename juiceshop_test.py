@@ -21,7 +21,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_authorization_bypass(self):
         
         url = "http://localhost:3000" # BASE URL
-        loginURL = "http://localhost:3000/rest/user/login" # Juice Shop Login URL
 
         admin_credentials = { # Admin Credentials For Test
             "email": "admin@juice-sh.op",
@@ -42,20 +41,20 @@ class TestOWASPJuiceShop(unittest.TestCase):
             }
         
 
-        response = requests.post(loginURL, data=admin_credentials) # Login as Admin
+        login_response = requests.post("http://localhost:3000/rest/user/login", data=admin_credentials) # Login as Admin
         
-        cookie = str(session.cookies.get_dict())
-        authorization = str(response.request.headers.get('Authorization'))
+        cookie = str(login_response.cookies.get_dict())
+        authorization = str(login_response.request.headers.get('Authorization'))
         headers = {
             "Cookie": cookie,
             "Authorization": authorization
         }
 
-        session.post(url+f"/api/BasketItems/", headers=headers, json=admin_payload)
+        modifyBasket_response = requests.post(url+f"/api/BasketItems/", headers=headers, json=admin_payload)
         print('Made it past POST BLOCK')
         
         # Log in as normal user and access admin's basket
-        session.post(loginURL, data=normal_user_credentials)
+        requests.post(loginURL, data=normal_user_credentials)
         basket_id = session.get(url+"/rest/basket/" + admin_user_basketID)
         headers = {
             "Authorization": session.cookies.get_dict()["token"]
