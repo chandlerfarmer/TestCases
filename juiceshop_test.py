@@ -43,10 +43,10 @@ class TestOWASPJuiceShop(unittest.TestCase):
         
 
         session = requests.Session()
-        session.post(loginURL, data=admin_credentials) # Login as Admin
+        response = session.post(loginURL, data=admin_credentials) # Login as Admin
         
         cookie = str(session.cookies.get_dict())
-        authorization = str(session.headers.get('Authorization'))
+        authorization = str(response.request.headers.get('Authorization'))
         headers = {
             "Cookie": cookie,
             "Authorization": authorization
