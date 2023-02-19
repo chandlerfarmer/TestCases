@@ -42,7 +42,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
 
         modifyBasket_response = requests.post("http://localhost:3000/api/BasketItems/", headers=adminHeaders, json=admin_payload) # API request to add an item to the admins basket
-        print("Content consists of ", modifyBasket_response._content)
         
 
         userlogin_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "cys444@gmail.com","password": "tester" })
@@ -58,7 +57,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
 
         getBasket_response = requests.get("http://localhost:3000/rest/basket/1", headers=userHeaders)
-        print("Confirm contet : ", getBasket_response.content)
 
         self.assertNotEqual(getBasket_response.status_code, 200)
         getBasket_response.close()
