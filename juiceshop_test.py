@@ -33,12 +33,17 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
         normal_user_basketID = '8' # Set Value to basketID of normal user
         admin_user_basketID = '1'  # Set Value to basketID of admin
-        data = {"BasketId:8, ProductId: 24, quantity: 1"}
+        admin_payload = {
+            "BasketId" :admin_user_basketID,
+            "ProductId": '24', 
+            "quantity": '1'
+            }
 
         # Log in as admin and add product to basket
         session = requests.Session()
         session.post(loginURL, data=admin_credentials)
-        session.post(url+f"/api/BasketItems/", data=data)
+        session.post(url+f"/api/BasketItems/", data=admin_payload)
+        # TESTING TILL HERE
         
         # Log in as normal user and access admin's basket
         session.post(loginURL, data=normal_user_credentials)
