@@ -58,8 +58,8 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
-        payload = {
-            "email": "test@test.com",
+        payload = { # Payload for a new unique user
+            "email": "test2@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
