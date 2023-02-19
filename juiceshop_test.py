@@ -41,11 +41,13 @@ class TestOWASPJuiceShop(unittest.TestCase):
         
 
         login_response = requests.post("http://localhost:3000/rest/user/login", data = { "email": "admin@juice-sh.op","password": "admin123"})
-        login_response_json = login_response.json()['authentication']['token']
-        print("testing this bitch", login_response_json)
+        token = login_response.json()['authentication']['token']
+        print("testing this bitch", token)
+        print('testin mf cookie', login_response.cookies.get('token'))
         
         headers = {
-            "Authorization": login_response_json['authentication']['token'],
+            "Authorization": token,
+            "Cookie": login_response.cookies.get('token'),
             "User-Agent": str(login_response.request.headers.get('User-Agent')),
             "Accept": "application/json",
             "Accept-Language": "en-us",
