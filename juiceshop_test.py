@@ -22,7 +22,7 @@ def handle_packet(packet):
     # Check if the packet has a payload
     if packet.payload is not None:
         # Do something with the packet's payload
-        print(packet)
+        packet.show()
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
 sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
