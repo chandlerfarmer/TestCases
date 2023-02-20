@@ -4,10 +4,22 @@ from scapy.all import *
 
 
 def packet_handler(packet):
-    print(packet.show())
+    if packet.haslayer(Raw):
+        
+        # Check if the packet has JSON data
+        json_data = None
+        try:
+            json_data = json.loads(packet[Raw].load)
+        except:
+            pass
+        
+        # If JSON data is found, print it and stop capturing packets
+        if json_data:
+            print(json_data)
+            return True
 
 
-sniff(iface="docker0", filter="src 172.17.0.1 and dst 172.17.0.2", prn=packet_handler, count=3)
+sniff(iface="docker0", filter="src 172.17.0.1 and dst 172.17.0.2", prn=packet_handler)
 
 
 class TestOWASPJuiceShop(unittest.TestCase):
