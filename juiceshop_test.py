@@ -5,22 +5,16 @@ import json
 
 def packet_handler(packet):
     if packet.haslayer(Raw):
-        print(packet[Raw].load)
-        print("made it past first point")
-
         # Check if the packet has JSON data
         json_data = None
         try:
             json_data = json.loads(packet[Raw].load.decode())
             print(json_data['email'])
             print(json_data['password'])
+            return True
         except:
             pass
         
-        # If JSON data is found, print it and stop capturing packets
-        if json_data:
-            print(json_data)
-            return True
 
 
 sniff(iface="docker0", filter="src 172.17.0.1 and dst 172.17.0.2", prn=packet_handler)
