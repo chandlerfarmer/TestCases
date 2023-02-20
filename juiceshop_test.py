@@ -10,6 +10,7 @@ def handle_json_packet(packet):
     # Parse the payload as a JSON object
     try:
         payload_json = json.loads(payload_str)
+        print(payload_json)
     except json.JSONDecodeError:
         # Ignore packets with invalid JSON payloads
         return
