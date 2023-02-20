@@ -4,9 +4,8 @@ from scapy.all import *
 
 
 def packet_handler(packet):
-    print(packet.summary())
+    print(packet.show())
 
-print(show_interfaces())
 
 sniff(iface="docker0", filter="src 172.17.0.1 and dst 172.17.0.2", prn=packet_handler, count=3)
 
