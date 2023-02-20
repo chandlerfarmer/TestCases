@@ -2,6 +2,7 @@ import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
 import pyshark
 import json
+import tshark
 
 # Set the source and destination addresses to filter on
 src_addr = "172.17.0.1"
