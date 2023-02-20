@@ -2,18 +2,15 @@ import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
 from scapy.all import *
 
-def sniff_loopback_for_json(json_data_to_find):
-    while True:
-        pkt = sniff(filter='tcp port 80 and src 127.0.0.1', count=1, iface='lo')[0]
-        print(pkt)
-        if pkt.haslayer('Raw'):
-            try:
-                json_data = json.loads(pkt[Raw].load)
-                if json_data == json_data_to_find:
-                    print("Found JSON data:", json_data)
-                    break
-            except ValueError:
-                pass
+def sniff_packets(pkt):
+    if pkt.haslayer('TCP') and pkt.haslayer('Raw'):
+        tcp = pkt[TCP]
+        raw = pkt[Raw].load
+
+        # Check if the packet is an HTTP request
+        if tcp.dport == 80 and b'POST' in raw:
+            print("HTTP request detected")
+            print("Raw data:", raw)
 
 class TestOWASPJuiceShop(unittest.TestCase):
 
@@ -113,4 +110,4 @@ class TestOWASPJuiceShop(unittest.TestCase):
     #unittest.main()
 
 
-sniff_loopback_for_json("password:admin123")
+sniff(filter='tcp port 80', iface='lo', prn=sniff_packets)
