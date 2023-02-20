@@ -1,6 +1,6 @@
-import unittest
-import requests
-# Here is a new comment.
+import unittest # Used to execute the unit tests
+import requests # Used for HTTP & API Calls
+
 
 
 class TestOWASPJuiceShop(unittest.TestCase):
