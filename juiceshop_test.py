@@ -113,4 +113,4 @@ class TestOWASPJuiceShop(unittest.TestCase):
     #unittest.main()
 
 
-sniff_loopback_for_json("password")
+sniff_loopback_for_json("password:admin123")
