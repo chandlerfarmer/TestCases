@@ -6,7 +6,7 @@ from scapy.all import *
 def packet_handler(packet):
     print(packet.show())
 
-sniff(filter="tcp", prn=packet_handler, count=10)
+sniff(iface="lo", filter="tcp port 80", prn=packet_handler, count=10)
 class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_sql_injection(self):
