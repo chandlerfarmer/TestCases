@@ -5,7 +5,7 @@ from scapy.all import *
 def sniff_loopback_for_json(json_data_to_find):
     while True:
         pkt = sniff(filter='tcp port 80 and src 127.0.0.1', count=1, iface='lo')[0]
-
+        print(pkt)
         if pkt.haslayer('Raw'):
             try:
                 json_data = json.loads(pkt[Raw].load)
