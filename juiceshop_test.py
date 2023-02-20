@@ -120,4 +120,4 @@ class TestOWASPJuiceShop(unittest.TestCase):
     #unittest.main()
 
 
-sniff_packets(filter='tcp port 80', iface='lo', prn=sniff_packets)
+sniff_packets()
