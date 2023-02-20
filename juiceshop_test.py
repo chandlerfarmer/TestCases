@@ -3,17 +3,17 @@ import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
 
-def handle_json_packet(packet):
+#def handle_json_packet(packet):
     # Decode the payload as a string
-    payload_str = str(packet.payload, 'utf-8')
+    #payload_str = str(packet.payload, 'utf-8')
 
     # Parse the payload as a JSON object
-    try:
-        payload_json = json.loads(payload_str)
-        print(payload_json)
-    except json.JSONDecodeError:
+    #try:
+        #payload_json = json.loads(payload_str)
+        #print(payload_json)
+    #except json.JSONDecodeError:
         # Ignore packets with invalid JSON payloads
-        return
+        #return
 
 filter_exp = "src host 172.17.0.1 and dst host 172.17.0.2"
 
