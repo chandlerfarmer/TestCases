@@ -6,8 +6,8 @@ import json
 def packet_handler(packet):
     if packet.haslayer(Raw):
         # Check if the packet has JSON data
-        json_data = json.loads(packet[Raw].load.decode())
         try:
+            json_data = json.loads(packet[Raw].load.decode())
             print(json_data['email'])
             print(json_data['password'])
             return True
