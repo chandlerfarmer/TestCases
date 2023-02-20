@@ -23,7 +23,6 @@ def handle_packet(packet):
     if packet.payload is not None:
         # Do something with the packet's payload
         print(packet.payload)
-        handle_json_packet(packet)
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
 sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
