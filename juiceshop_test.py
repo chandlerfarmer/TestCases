@@ -1,36 +1,17 @@
 import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
-import pyshark
-import json
-import tshark
-
-# Set the source and destination addresses to filter on
-src_addr = "172.17.0.1"
-dst_addr = "172.17.0.2"
-interface = 'docker0'
-
-# Create a Tshark capture object with the filter expression
-capture = pyshark.LiveCapture(interface=interface, display_filter=f"ip.src == {src_addr} and ip.dst == {dst_addr}")
-
-# Start the capture
-capture.sniff()
-
-# Loop through the captured packets
-for packet in capture:
-
-    # Extract the payload of the packet
-    payload = packet.payload
-
-    # Check if the payload contains the specific JSON payload you're looking for
-    if "password" in payload:
-        
-        # Parse the JSON data from the payload
-        json_data = json.loads(payload)
-        
-        # Analyze the JSON data as needed
-        # ...
+from scapy.all import *
 
 
+filter_exp = "src host 172.17.0.1 and dst host 172.17.0.2"
+
+# Define the function to handle each captured packet
+def handle_packet(packet):
+    # Process the captured packet as needed
+    print(packet.summary())
+
+# Start the capture on the docker0 interface with the specified filter expression and packet handler
+sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
 
 
 class TestOWASPJuiceShop(unittest.TestCase):
