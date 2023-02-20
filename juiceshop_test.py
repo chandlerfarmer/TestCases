@@ -8,7 +8,7 @@ filter_exp = "src host 172.17.0.1 and dst host 172.17.0.2"
 # Define the function to handle each captured packet
 def handle_packet(packet):
     # Process the captured packet as needed
-    print(packet.summary())
+    print(packet.payload)
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
 sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
