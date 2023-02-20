@@ -5,7 +5,8 @@ from scapy.all import *
 
 def packet_handler(packet):
     if packet.haslayer(Raw):
-        
+        print("made it past first point")
+
         # Check if the packet has JSON data
         json_data = None
         try:
