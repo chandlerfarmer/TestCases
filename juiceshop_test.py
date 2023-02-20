@@ -119,6 +119,4 @@ class TestOWASPJuiceShop(unittest.TestCase):
 #if __name__ == '__main__':
     #unittest.main()
 
-sniffing_Process = sniff_packets(filter="tcp port 80")
-sniffing_Process.start()
-sniffing_Process.join()
+sniff(filter="tcp port 80", iface='lo', prn=sniff_packets)
