@@ -1,14 +1,25 @@
 import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
 from scapy.all import *
+import json
 
+def handle_json_packet(packet):
+    # Decode the payload as a string
+    payload_str = str(packet.payload, 'utf-8')
+
+    # Parse the payload as a JSON object
+    try:
+        payload_json = json.loads(payload_str)
+    except json.JSONDecodeError:
+        # Ignore packets with invalid JSON payloads
+        return
 
 filter_exp = "src host 172.17.0.1 and dst host 172.17.0.2"
 
 # Define the function to handle each captured packet
 def handle_packet(packet):
     # Process the captured packet as needed
-    print(packet.payload)
+   handle_json_packet(packet.payload)
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
 sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
