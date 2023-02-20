@@ -8,7 +8,7 @@ def packet_handler(packet):
 
 print(show_interfaces())
 
-sniff(iface="docker0", filter="port 80", prn=packet_handler, count=10)
+sniff(iface="docker0", filter="src 172.17.0.1 and dst 172.17.0.2", prn=packet_handler, count=3)
 
 
 class TestOWASPJuiceShop(unittest.TestCase):
