@@ -1,31 +1,12 @@
 import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
-import pcapy
-import json
+from scapy.all import *
 
-# Set up the capture device
-capture = pcapy.open_live('lo', 65536, True, 100)
 
-# Specify the JSON parameter to search for
-target_param = 'password'
+def packet_handler(packet):
+    print(packet.show())
 
-# Start capturing packets
-while True:
-    # Capture a single packet
-    (header, payload) = capture.next()
-
-    # Decode the payload as JSON if it exists
-    if payload:
-        try:
-            data = json.loads(payload)
-
-            # Check if the target parameter is present in the JSON data
-            if target_param in data:
-                print(f'Found target parameter {target_param}: {data[target_param]}')
-        except ValueError:
-            # The payload is not JSON data
-            pass
-
+sniff(filter="tcp", prn=packet_handler, count=10)
 class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_sql_injection(self):
