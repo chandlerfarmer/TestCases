@@ -10,7 +10,7 @@ def packet_handler(packet):
         # Check if the packet has JSON data
         json_data = None
         try:
-            json_data = json.loads(packet[Raw].load)
+            json_data = json.loads(packet[Raw].load.decode())
         except:
             pass
         
