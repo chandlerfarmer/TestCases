@@ -21,7 +21,7 @@ for packet in capture:
     payload = packet.payload
 
     # Check if the payload contains the specific JSON payload you're looking for
-    if "specific json payload" in payload:
+    if "password" in payload:
         
         # Parse the JSON data from the payload
         json_data = json.loads(payload)
