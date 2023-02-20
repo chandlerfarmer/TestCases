@@ -1,26 +1,30 @@
 import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
-from scapy.all import *
+import pcapy
+import json
 
-def sniff_packets(pkt):
-    if pkt.haslayer('TCP') and pkt.haslayer('Raw'):
-        tcp = pkt[TCP]
-        raw = pkt[Raw].load
+# Set up the capture device
+capture = pcapy.open_live('lo', 65536, True, 100)
 
-        # Check if the packet is an HTTP POST request
-        if tcp.dport == 80 and b'POST' in raw:
-            # Check if the request data contains JSON
-            if b'Content-Type: application/json' in raw:
-                # Extract the JSON data from the raw payload
-                try:
-                    json_data = json.loads(raw.decode())
-                    email = json_data['email']
-                    password = json_data['password']
-                    print("JSON data containing email and password captured:")
-                    print(f"Email: {email}")
-                    print(f"Password: {password}")
-                except Exception as e:
-                    print(f"Error extracting JSON data: {e}")
+# Specify the JSON parameter to search for
+target_param = 'password'
+
+# Start capturing packets
+while True:
+    # Capture a single packet
+    (header, payload) = capture.next()
+
+    # Decode the payload as JSON if it exists
+    if payload:
+        try:
+            data = json.loads(payload)
+
+            # Check if the target parameter is present in the JSON data
+            if target_param in data:
+                print(f'Found target parameter {target_param}: {data[target_param]}')
+        except ValueError:
+            # The payload is not JSON data
+            pass
 
 class TestOWASPJuiceShop(unittest.TestCase):
 
@@ -119,4 +123,3 @@ class TestOWASPJuiceShop(unittest.TestCase):
 #if __name__ == '__main__':
     #unittest.main()
 
-sniff(filter="tcp port 80", iface='lo', prn=sniff_packets)
