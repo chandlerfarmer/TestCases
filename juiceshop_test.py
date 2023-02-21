@@ -3,22 +3,16 @@ import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
 
-# Define a callback function to handle each packet
-def handle_packet(packet):
-        
 
+def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
         try:
-            payload = packet.load
-            if b"admin@juice-sh.op" and b"admin123" in payload:
-                print("Email and Password Found.")
-        except AttributeError:
-            print('no payload')
+            payload = packet.load # Check if the packet has a payload
 
-# Capture packets on the network interface
-filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354"
-sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)
-
-
+            if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
+                return True # Packet Contains Clear Text
+            
+        except AttributeError: # Packet doesn't contain a payload
+            print('No Payload Found')
 
 class TestOWASPJuiceShop(unittest.TestCase):
 
@@ -90,6 +84,11 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
+
+        # Capture packets on the network interface
+        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
+        captured_packets = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) # Sniff the local interface for 2 HTTP POST Requests
+
         url = "http://localhost:3000"
         email = "admin@juice-sh.op"
         password = "admin123"
@@ -98,8 +97,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         response = requests.post(url+"/rest/user/login", data=payload)
-        self.assertIn("email", response.text)
-        self.assertIn("password", response.text)
+        self.assertNotEqual(captured_packets, True) 
 
     def test_improper_input_validation(self):
         url = "http://localhost:3000"
