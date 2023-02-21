@@ -10,6 +10,8 @@ def handle_packet(packet):
     try:
         print(packet.load)
         print("PACKET LOAD ABOVEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n")
+        if b"email" and b"password" in packet.load:
+            print("Email and Password Found.")
     except AttributeError:
         print("packet has no payload")
 
