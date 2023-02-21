@@ -4,6 +4,14 @@ from scapy.all import *
 import json
 import threading
 
+def sniffer_thread():
+
+    filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
+        #sniffed = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) # Sniff the local interface for 2 HTTP POST Requests
+    sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)
+
+
+
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
         try:
             payload = packet.load # Check if the packet has a payload
@@ -71,7 +79,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test15@test.com",
+            "email": "test25@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -85,14 +93,10 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
-        print('Made it to testing')
-        # Capture packets on the network interface
-        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
-        #sniffed = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) # Sniff the local interface for 2 HTTP POST Requests
-        my_thread = threading.Thread(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2))
-        my_thread.start()
+        print('Made it to testing') 
+        my_thread = threading.Thread(sniffer_thread)
         print('Made it past thread')
-        if True in sniffed:
+        if True in my_thread:
             comparator = True
         else:
             comparator = False
