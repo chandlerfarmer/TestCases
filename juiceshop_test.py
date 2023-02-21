@@ -108,7 +108,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         requests.post(url+"/rest/user/login", data=payload)
-        time.sleep(2)
         my_thread.join()
         result = handle_packet.result
         if (result == True):
