@@ -2,7 +2,7 @@ import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
-
+import threading
 
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
         try:
@@ -88,8 +88,10 @@ class TestOWASPJuiceShop(unittest.TestCase):
         print('Made it to testing')
         # Capture packets on the network interface
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
-        sniffed = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) # Sniff the local interface for 2 HTTP POST Requests
-        print('Made it past sniffer')
+        #sniffed = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) # Sniff the local interface for 2 HTTP POST Requests
+        my_thread = threading.Thread(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2))
+        my_thread.start()
+        print('Made it past thread')
         if True in sniffed:
             comparator = True
         else:
