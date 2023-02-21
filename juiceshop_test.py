@@ -79,7 +79,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test440@test.com",
+            "email": "test441@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -93,7 +93,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
-        my_thread = threading.Thread(target=threadingFunc)
+        my_thread = threading.Thread(target=sniffer_thread)
         my_thread.daemon = True  # set the thread as a daemon thread
         my_thread.start()
         print('Made it past thread')
