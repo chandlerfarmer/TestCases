@@ -25,8 +25,8 @@ def handle_packet(packet):
         #packet.show()
         #hex_str = hexdump(packet)
         # Convert the packet to JSON
-        http_data = packet[TCP].payload
-        print(http_data)
+         payload_data = packet[Raw].load
+        print(payload_data)
 
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
