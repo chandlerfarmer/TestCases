@@ -3,20 +3,12 @@ import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
 
-def extract_fields(packet):
-    if packet.haslayer(TCP) and packet.haslayer(Raw):
-        # Check if the packet contains a POST request
-        if "POST" in str(packet[TCP].payload):
-            print(packet)
-            # Extract the body of the POST request
-            body = str(packet[TCP].payload).split("\r\n\r\n")[1]
-            # Extract the email and password fields from the body
-            email = body.split("&")[0].split("=")[1]
-            password = body.split("&")[1].split("=")[1]
-            print(f"Email: {email}, Password: {password}")
+# Define a callback function to handle each packet
+def handle_packet(packet):
+    print(packet.summary())
 
-sniff(filter="tcp and dst port 80", iface="lo", prn=extract_fields)
-
+# Capture packets on the network interface
+sniff(iface="lo", prn=handle_packet)
 
 
 
