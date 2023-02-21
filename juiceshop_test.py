@@ -28,7 +28,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         response = requests.post(url+"/rest/user/login", data=payload)
         self.assertNotEqual(response.status_code, 200)
         self.assertEqual(response.text, "Invalid email or password.")
-
+        response.close()
 
     def test_authorization_bypass(self):
         
@@ -65,7 +65,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
 
         getBasket_response = requests.get("http://localhost:3000/rest/basket/1", headers=userHeaders)
-
+        getBasket_response.close()
         self.assertNotEqual(getBasket_response.status_code, 200)
 
     def test_weak_password_requirements(self):
@@ -85,11 +85,11 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
-
+        print('Made it to testing')
         # Capture packets on the network interface
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
         sniffed = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) # Sniff the local interface for 2 HTTP POST Requests
-
+        print('Made it past sniffer')
         if True in sniffed:
             comparator = True
         else:
@@ -103,7 +103,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         requests.post(url+"/rest/user/login", data=payload)
-        print(requests.Response)
         self.assertNotEqual(comparator, True) 
 
     #def test_improper_input_validation(self):
