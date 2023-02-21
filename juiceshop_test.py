@@ -8,8 +8,8 @@ def handle_packet(packet):
     print("PACKET SUMMARY\n")
     print(packet.summary())
     try:
-        print("PACKET LOAD\n")
         print(packet.load)
+        print("PACKET LOAD ABOVEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n")
     except AttributeError:
         print("packet has no payload")
 
