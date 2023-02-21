@@ -7,8 +7,11 @@ import json
 def handle_packet(packet):
     print("PACKET SUMMARY\n")
     print(packet.summary())
-    print("PACKET LOAD\n")
-    print(packet.load)
+    try:
+        print("PACKET LOAD\n")
+        print(packet.load)
+    except AttributeError:
+        print("packet has no payload")
 
 # Capture packets on the network interface
 sniff(iface="lo", prn=handle_packet)
