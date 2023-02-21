@@ -77,7 +77,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test26@test.com",
+            "email": "test36@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -94,7 +94,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         print('Made it to testing') 
         my_thread = threading.Thread(target=sniffer_thread)
         print('Made it past thread')
-        if True in my_thread:
+        if my_thread == True:
             comparator = True
         else:
             comparator = False
