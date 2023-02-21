@@ -15,6 +15,7 @@ def handle_packet(packet): # Checks if the packet payload contains the credentia
             payload = packet.load # Check if the packet has a payload
 
             if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
+                print("FUCK YEAH")
                 result = True
                 return result # Packet Contains Clear Text
             
@@ -79,7 +80,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test442@test.com",
+            "email": "test443@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
