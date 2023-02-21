@@ -26,6 +26,7 @@ def handle_packet(packet):
         hex_str = hexdump(packet)
         if 'email' and 'password' in hex_str:
             print(hex_str)
+            return True
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
 sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
