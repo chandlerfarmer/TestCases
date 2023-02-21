@@ -3,26 +3,19 @@ import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
 
-# Define the username and password data
-email = "admin@juice-sh.op"
-password = "admin123"
-payload = f"email={email}&password={password}"
+def extract_fields(packet):
+    if packet.haslayer(TCP) and packet.haslayer(Raw):
+        # Check if the packet contains a POST request
+        if "POST" in str(packet[TCP].payload):
+            # Extract the body of the POST request
+            body = str(packet[TCP].payload).split("\r\n\r\n")[1]
+            # Extract the email and password fields from the body
+            email = body.split("&")[0].split("=")[1]
+            password = body.split("&")[1].split("=")[1]
+            print(f"Email: {email}, Password: {password}")
 
-# Define the packet with the POST request
-packet = IP(dst="localhost")/TCP(dport=3000)/b"POST /login HTTP/1.1\r\nHost: localhost:3000\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: {}\r\n\r\n{}".format(len(payload), payload)
+sniff(filter="tcp and dst port 80", iface="lo", prn=extract_fields)
 
-# Send the packet and receive the response
-response = sr1(packet)
-
-# Check if a response was received and if the response code was 200
-if response and response.haslayer(HTTP):
-    http_layer = response[HTTP]
-    if http_layer.status_code == 200:
-        print("Login successful")
-    else:
-        print(f"Login failed with status code {http_layer.status_code}")
-else:
-    print("No response received")
 
 
 
