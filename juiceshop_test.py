@@ -23,13 +23,15 @@ def handle_packet(packet):
     if packet.payload is not None:
         # Do something with the packet's payload
         #packet.show()
-        hex_str = hexdump(packet)
-        if ("password" in hex_str):
-            print(hex_str)
+        #hex_str = hexdump(packet)
+        # Convert the packet to JSON
+        json_packet = packet.to_json()
+        print(json.dumps(json.loads(json_packet), indent=4))
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
 sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
-sniff(stop_filter=stop_capture)
+
+
 class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_sql_injection(self):
