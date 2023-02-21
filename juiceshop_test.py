@@ -23,10 +23,6 @@ def handle_packet(packet): # Checks if the packet payload contains the credentia
         return
 
 
-def threadingFunc():
-    filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
-    handle_packet(sniff(iface="lo", filter= filter_expression, count=2))
-
 class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_sql_injection(self):
@@ -98,8 +94,10 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_cleartext_transmission(self):
         my_thread = threading.Thread(target=threadingFunc)
+        my_thread.daemon = True  # set the thread as a daemon thread
         my_thread.start()
         print('Made it past thread')
+        time.sleep(1.5)
         url = "http://localhost:3000"
         email = "admin@juice-sh.op"
         password = "admin123"
