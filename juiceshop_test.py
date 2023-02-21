@@ -4,11 +4,6 @@ from scapy.all import *
 import json
 import threading
 import time
-def sniffer_thread():
-    filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
-        #sniffed = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) # Sniff the local interface for 2 HTTP POST Requests
-    sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)
-    print('YEAHHH')
 
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
         print("FUCK YEAH")
@@ -80,7 +75,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test454@test.com",
+            "email": "test3334@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -94,7 +89,8 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
-        my_thread = threading.Thread(target=sniffer_thread)
+        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
+        my_thread = threading.Thread(target=handle_packet(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)))
         my_thread.daemon = True  # set the thread as a daemon thread
         my_thread.start()
         time.sleep(1)
