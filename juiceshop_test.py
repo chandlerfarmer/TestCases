@@ -79,7 +79,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test441@test.com",
+            "email": "test442@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -96,8 +96,8 @@ class TestOWASPJuiceShop(unittest.TestCase):
         my_thread = threading.Thread(target=sniffer_thread)
         my_thread.daemon = True  # set the thread as a daemon thread
         my_thread.start()
+        time.sleep(1)
         print('Made it past thread')
-        time.sleep(1.5)
         url = "http://localhost:3000"
         email = "admin@juice-sh.op"
         password = "admin123"
@@ -106,6 +106,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         requests.post(url+"/rest/user/login", data=payload)
+        time.sleep(2)
         my_thread.join()
         result = handle_packet.result
         if (result == True):
