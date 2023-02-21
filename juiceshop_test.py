@@ -9,7 +9,7 @@ def handle_packet(packet):
 
         try:
             payload = packet.load
-            if b"\"email\":admin@juice-sh.op" and b"\"password\":admin123" in packet.load:
+            if b"admin@juice-sh.op" and b"admin123" in payload:
                 print("Email and Password Found.")
         except AttributeError:
             print('no payload')
