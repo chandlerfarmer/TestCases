@@ -24,11 +24,12 @@ def handle_packet(packet):
         # Do something with the packet's payload
         #packet.show()
         hex_str = hexdump(packet)
-        print(hex_str)
+        if ("password" in hex_str):
+            print(hex_str)
 
 # Start the capture on the docker0 interface with the specified filter expression and packet handler
 sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
-
+sniff(stop_filter=stop_capture)
 class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_sql_injection(self):
