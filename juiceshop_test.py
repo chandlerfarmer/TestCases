@@ -5,9 +5,14 @@ import json
 
 # Define a callback function to handle each packet
 def handle_packet(packet):
-        if packet.load is not None:
+        
+
+        try:
+            payload = packet.load
             if b"\"email\":admin@juice-sh.op" and b"\"password\":admin123" in packet.load:
                 print("Email and Password Found.")
+        except AttributeError:
+            print('no payload')
 
 # Capture packets on the network interface
 sniff(iface="lo", prn=handle_packet)
