@@ -25,7 +25,7 @@ def handle_packet(packet):
         #packet.show()
         #hex_str = hexdump(packet)
         # Convert the packet to JSON
-         payload_data = packet[Raw].load
+        payload_data = packet[Raw].load
         print(payload_data)
 
 
