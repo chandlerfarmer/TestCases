@@ -15,7 +15,8 @@ def handle_packet(packet):
             print('no payload')
 
 # Capture packets on the network interface
-sniff(iface="lo", prn=handle_packet)
+filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354"
+sniff(iface="lo", filter= filter_expression, prn=handle_packet)
 
 
 
