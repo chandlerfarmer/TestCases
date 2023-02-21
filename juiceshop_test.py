@@ -71,7 +71,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test0000@test.com",
+            "email": "test15@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -81,7 +81,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             }
         }
         response = requests.post(url, data=payload)
-        print('Content is:\n', response.content)
+        response.close()
         self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
@@ -103,6 +103,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         requests.post(url+"/rest/user/login", data=payload)
+        print(requests.Response)
         self.assertNotEqual(comparator, True) 
 
     #def test_improper_input_validation(self):
