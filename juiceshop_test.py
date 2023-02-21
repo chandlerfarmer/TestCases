@@ -7,6 +7,7 @@ def extract_fields(packet):
     if packet.haslayer(TCP) and packet.haslayer(Raw):
         # Check if the packet contains a POST request
         if "POST" in str(packet[TCP].payload):
+            print(packet)
             # Extract the body of the POST request
             body = str(packet[TCP].payload).split("\r\n\r\n")[1]
             # Extract the email and password fields from the body
