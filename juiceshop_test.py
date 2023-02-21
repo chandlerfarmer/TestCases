@@ -3,6 +3,7 @@ import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
 import threading
+import time
 
 def sniffer_thread():
     filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
@@ -94,7 +95,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
         my_thread = threading.Thread(target=sniffer_thread)
         my_thread.start()
         print('Made it past thread')
-
         url = "http://localhost:3000"
         email = "admin@juice-sh.op"
         password = "admin123"
@@ -102,9 +102,11 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "email": email,
             "password": password
         }
+        time.sleep(1)
         requests.post(url+"/rest/user/login", data=payload)
         my_thread.join()
-        if (my_thread == True):
+        result = handle_packet.result
+        if (result == True):
             comparator = True
         else:
             comparator = False
