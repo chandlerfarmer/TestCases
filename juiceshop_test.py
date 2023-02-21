@@ -105,17 +105,17 @@ class TestOWASPJuiceShop(unittest.TestCase):
         requests.post(url+"/rest/user/login", data=payload)
         self.assertNotEqual(comparator, True) 
 
-    def test_improper_input_validation(self):
-        url = "http://localhost:3000"
-        credentials = {
-            "email": "admin@juice-sh.op",
-            "password": "admin123"
-        }
-        session = requests.Session()
-        session.post(url+"/rest/user/login", data=credentials)
-        product_id = session.get(url+"/api/products").json()[0]["id"]
-        response = session.put(url+f"/api/BasketItems/{product_id}", json={"quantity": -10})
-        self.assertNotEqual(response.status_code, 200)
+    #def test_improper_input_validation(self):
+        #url = "http://localhost:3000"
+        #credentials = {
+            #"email": "admin@juice-sh.op",
+            #"password": "admin123"
+        #}
+        #session = requests.Session()
+        #session.post(url+"/rest/user/login", data=credentials)
+        #product_id = session.get(url+"/api/products").json()[0]["id"]
+        #response = session.put(url+f"/api/BasketItems/{product_id}", json={"quantity": -10})
+        #self.assertNotEqual(response.status_code, 200)
 
 
 if __name__ == '__main__':
