@@ -3,34 +3,27 @@ import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
 
-#def handle_json_packet(packet):
-    # Decode the payload as a string
-    #payload_str = str(packet.payload, 'utf-8')
+# Define the username and password data
+email = "admin@juice-sh.op"
+password = "admin123"
+payload = f"email={email}&password={password}"
 
-    # Parse the payload as a JSON object
-    #try:
-        #payload_json = json.loads(payload_str)
-        #print(payload_json)
-    #except json.JSONDecodeError:
-        # Ignore packets with invalid JSON payloads
-        #return
+# Define the packet with the POST request
+packet = IP(dst="localhost")/TCP(dport=3000)/b"POST /login HTTP/1.1\r\nHost: localhost:3000\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: {}\r\n\r\n{}".format(len(payload), payload)
 
-filter_exp = "src host 172.17.0.1 and dst host 172.17.0.2"
+# Send the packet and receive the response
+response = sr1(packet)
 
-# Define the function to handle each captured packet
-def handle_packet(packet):
-    # Check if the packet has a payload
-    if packet.payload is not None:
-        # Do something with the packet's payload
-        #packet.show()
-        #hex_str = hexdump(packet)
-        # Convert the packet to JSON
-        payload_data = packet[Raw].load
-        print(payload_data)
+# Check if a response was received and if the response code was 200
+if response and response.haslayer(HTTP):
+    http_layer = response[HTTP]
+    if http_layer.status_code == 200:
+        print("Login successful")
+    else:
+        print(f"Login failed with status code {http_layer.status_code}")
+else:
+    print("No response received")
 
-
-# Start the capture on the docker0 interface with the specified filter expression and packet handler
-sniff(iface="docker0", filter=filter_exp, prn=handle_packet)
 
 
 class TestOWASPJuiceShop(unittest.TestCase):
