@@ -13,6 +13,7 @@ def handle_packet(packet): # Checks if the packet payload contains the credentia
             
         except AttributeError: # Packet doesn't contain a payload
             print('No Payload Found')
+        return
 
 class TestOWASPJuiceShop(unittest.TestCase):
 
