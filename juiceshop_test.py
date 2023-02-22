@@ -8,6 +8,7 @@ import time
 
 
 def makeRequest():
+    time.sleep(2)
     url = "http://localhost:3000"
     email = "admin@juice-sh.op"
     password = "admin123"
@@ -15,7 +16,6 @@ def makeRequest():
         "email": email,
         "password": password
     }
-    time.sleep(1)
     requests.post(url+"/rest/user/login", data=payload)
 
 
