@@ -5,8 +5,21 @@ import json
 import threading
 import time
 
+
+
+def makeRequest():
+    url = "http://localhost:3000"
+    email = "admin@juice-sh.op"
+    password = "admin123"
+    payload = {
+        "email": email,
+        "password": password
+    }
+    time.sleep(2)
+    requests.post(url+"/rest/user/login", data=payload)
+
+
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
-        print("FUCK YEAH")
         try:
             payload = packet.load # Check if the packet has a payload
 
@@ -75,7 +88,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test33334@test.com",
+            "email": "test2020@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -89,23 +102,15 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 201)
 
     def test_cleartext_transmission(self):
-        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD 
-        my_thread = threading.Thread(target=handle_packet(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)))
-        my_thread.daemon = True  # set the thread as a daemon thread
-        my_thread.start()
-        print('Made it past thread')
-        url = "http://localhost:3000"
-        email = "admin@juice-sh.op"
-        password = "admin123"
-        payload = {
-            "email": email,
-            "password": password
-        }
-        requests.post(url+"/rest/user/login", data=payload)
+        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
+        request_thread = threading.Thread(target=makeRequest())
+        val = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) 
+        #my_thread = threading.Thread(target=handle_packet(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)))
+       # my_thread.daemon = True  # set the thread as a daemon thread
+        #my_thread.start()
 
-        my_thread.join()
-        result = handle_packet.result
-        if (result == True):
+        request_thread.join()
+        if (val == True):
             comparator = True
         else:
             comparator = False
