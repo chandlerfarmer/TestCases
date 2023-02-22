@@ -16,11 +16,13 @@ def makeRequest():
         "password": password
     }
     requests.post(url+"/rest/user/login", data=payload)
+    print("made Request")
 
 
 def capture_packets():
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
         sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) 
+        print("SNIFFING")
 
 
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
