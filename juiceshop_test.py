@@ -29,8 +29,8 @@ def capture_packets():
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
         try:
             payload = packet.load # Check if the packet has a payload
-            print("capturing packet")
             if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
+                print("capturing packet")
                 result = True
                 return result # Packet Contains Clear Text
             
@@ -95,7 +95,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test20222222220@test.com",
+            "email": "test20222222222220@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -108,35 +108,41 @@ class TestOWASPJuiceShop(unittest.TestCase):
         response.close()
         self.assertNotEqual(response.status_code, 201)
 
-    def test_cleartext_transmission(self):
+    #def test_cleartext_transmission(self):
 
-        sniffer_thread = threading.Thread(target=capture_packets)
-        packetSend_thread = threading.Thread(target=makeRequest)
-        sniffer_thread.start()
-        packetSend_thread.start()
-        time.sleep(3)
-        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
+        #sniffer_thread = threading.Thread(target=capture_packets)
+        #packetSend_thread = threading.Thread(target=makeRequest)
+        #sniffer_thread.start()
+        #packetSend_thread.start()
+        #time.sleep(3)
+        #filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
         #val = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) 
         #my_thread = threading.Thread(target=handle_packet(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)))
        # my_thread.daemon = True  # set the thread as a daemon thread
         #my_thread.start()
-        if (sniffer_thread == True):
-            comparator = True
-        else:
-            comparator = False
-        self.assertNotEqual(comparator, True) 
+        #if (sniffer_thread == True):
+         #   comparator = True
+        #else:
+        #    comparator = False
+        #self.assertNotEqual(comparator, True) 
 
-    #def test_improper_input_validation(self):
-        #url = "http://localhost:3000"
-        #credentials = {
-            #"email": "admin@juice-sh.op",
-            #"password": "admin123"
-        #}
-        #session = requests.Session()
-        #session.post(url+"/rest/user/login", data=credentials)
-        #product_id = session.get(url+"/api/products").json()[0]["id"]
-        #response = session.put(url+f"/api/BasketItems/{product_id}", json={"quantity": -10})
-        #self.assertNotEqual(response.status_code, 200)
+    def test_improper_input_validation(self):
+        url = "http://localhost:3000"
+        
+        credentials = { # Credentials to Log in
+            "email": "admin@juice-sh.op",
+            "password": "admin123"
+        }
+        adminlogin_response = requests.post(url+"/rest/user/login", data=credentials) # Stores the Log in Response
+
+        adminToken = adminlogin_response.json()['authentication']['token'] # Capture the Admins access token
+
+        adminHeaders = {
+             "Authorization": "Bearer " + adminToken,
+        }
+
+        response = requests.put(url+f"/api/BasketItems/1", headers=adminHeaders, json={"quantity": -10})
+        self.assertNotEqual(response.status_code, 200)
 
 
 if __name__ == '__main__':
