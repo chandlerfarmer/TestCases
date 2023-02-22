@@ -29,7 +29,7 @@ def capture_packets():
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
         try:
             payload = packet.load # Check if the packet has a payload
-
+            print("capturing packet")
             if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
                 result = True
                 return result # Packet Contains Clear Text
