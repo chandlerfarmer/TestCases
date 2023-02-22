@@ -15,7 +15,6 @@ def makeRequest():
         "email": email,
         "password": password
     }
-    time.sleep(2)
     requests.post(url+"/rest/user/login", data=payload)
 
 
@@ -103,13 +102,12 @@ class TestOWASPJuiceShop(unittest.TestCase):
 
     def test_cleartext_transmission(self):
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        request_thread = threading.Thread(target=makeRequest())
+        threading.Thread(target=makeRequest())
         val = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) 
         #my_thread = threading.Thread(target=handle_packet(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)))
        # my_thread.daemon = True  # set the thread as a daemon thread
         #my_thread.start()
 
-        request_thread.join()
         if (val == True):
             comparator = True
         else:
