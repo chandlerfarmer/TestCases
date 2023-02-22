@@ -8,7 +8,6 @@ import time
 
 
 def makeRequest():
-    time.sleep(2)
     url = "http://localhost:3000"
     email = "admin@juice-sh.op"
     password = "admin123"
@@ -93,7 +92,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test2022220@test.com",
+            "email": "test20222220@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
