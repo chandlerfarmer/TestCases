@@ -114,14 +114,9 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
+       # x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
+        requests.post(url+"/rest/user/login", data=payload)
         x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
-        test = threading.Thread(target=login_thread)
-        test.start()
-        time.sleep(3)
-        print("STILL IN MAIN")
-        print("AGAIN IN MAIN")
-        test.join()
-       # requests.post(url+"/rest/user/login", data=payload)
    
         #self.assertNotEqual(handle_packet.result, True)
                   
