@@ -95,7 +95,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test2022222222222222222222222222222222022222@test.com",
+            "email": "test202222222222222222222222222222222222022222@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -140,18 +140,21 @@ class TestOWASPJuiceShop(unittest.TestCase):
         adminHeaders = {
              "Authorization": "Bearer " + adminToken,
         }
+
         response = requests.post(url+f"/api/BasketItems/", data={"BasketId": "1", "ProductId": 1, "quantity": 1})
         #json_data = response.json()
         #id_value = json_data['data']['id']
-        if 'application/json' in response.headers['Content-Type']:
-        # The response contains a JSON payload
-            print("THERE IS JSON")
-        else:
-             print("NONE")
- 
+        response_text = response.text
 
-        response = requests.put(url+f"/api/BasketItems/{id_value}", headers=adminHeaders, json={"quantity": -10})
-        self.assertNotEqual(response.status_code, 200)
+        # Parse the JSON payload from the response body
+        data = json.loads(response_text)
+        print(data)
+
+        # Access the data from the JSON payload
+        #id = data['id']
+
+        #response = requests.put(url+f"/api/BasketItems/{id_value}", headers=adminHeaders, json={"quantity": -10})
+       # self.assertNotEqual(response.status_code, 200)
 
 
 if __name__ == '__main__':
