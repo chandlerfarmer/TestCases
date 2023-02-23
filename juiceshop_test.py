@@ -117,6 +117,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
         test = threading.Thread(target=login_thread)
         test.start()
+        time.sleep(3)
         print("STILL IN MAIN")
         print("AGAIN IN MAIN")
         test.join()
