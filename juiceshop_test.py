@@ -2,41 +2,6 @@ import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
-import threading
-import time
-
-
-
-def makeRequest():
-    time.sleep(2)
-    url = "http://localhost:3000"
-    email = "admin@juice-sh.op"
-    password = "admin123"
-    payload = {
-        "email": email,
-        "password": password
-    }
-    requests.post(url+"/rest/user/login", data=payload)
-    print("made Request")
-
-
-def capture_packets():
-        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) 
-        print("SNIFFING")
-
-
-def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
-        try:
-            payload = packet.load # Check if the packet has a payload
-            if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
-                print("capturing packet")
-                result = True
-                return result # Packet Contains Clear Text
-            
-        except AttributeError: # Packet doesn't contain a payload
-            print('No Payload Found')
-        return
 
 
 class TestOWASPJuiceShop(unittest.TestCase):
@@ -95,7 +60,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "tester1022222@test.com",
+            "email": "tester1022222322@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -108,23 +73,32 @@ class TestOWASPJuiceShop(unittest.TestCase):
         response.close()
         self.assertNotEqual(response.status_code, 200)
 
-    #def test_cleartext_transmission(self):
+    def test_cleartext_transmission(self):
+         
+        url = "http://localhost:3000"
+        email = "admin@juice-sh.op"
+        password = "admin123"
+        payload = {
+            "email": email,
+            "password": password
+        }
+        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
+        packets = sniff(iface="lo", filter= filter_expression, count=2)
 
-        #sniffer_thread = threading.Thread(target=capture_packets)
-        #packetSend_thread = threading.Thread(target=makeRequest)
-        #sniffer_thread.start()
-        #packetSend_thread.start()
-        #time.sleep(3)
-        #filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        #val = sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) 
-        #my_thread = threading.Thread(target=handle_packet(sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2)))
-       # my_thread.daemon = True  # set the thread as a daemon thread
-        #my_thread.start()
-        #if (sniffer_thread == True):
-         #   comparator = True
-        #else:
-        #    comparator = False
-        #self.assertNotEqual(comparator, True) 
+
+        response = requests.post(url+"/rest/user/login", data=payload)
+
+        for packet in packets:
+            try:
+                payload = packet.load # Check if the packet has a payload
+                if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
+                    print("capturing packet")
+                    result = True
+            except AttributeError: # Packet doesn't contain a payload
+                print('No Payload Found')
+
+        self.assertNotEqual(result, True)
+                
 
     def test_improper_input_validation(self):
         url = "http://localhost:3000"
@@ -145,7 +119,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "Content-Type": "application/json"
         }
 
-        response = requests.post(url+f"/api/BasketItems/", headers=adminHeaders, data={"BasketId": "1", "ProductId": 1, "quantity": 1})
+        requests.post(url+f"/api/BasketItems/", headers=adminHeaders, data={"BasketId": "1", "ProductId": 1, "quantity": 1})
         real_response = requests.get(url+f"/rest/basket/1", headers=adminHeaders)
         json_content = real_response.json()
         val = json_content['data']['Products'][0]['BasketItem']['id']
