@@ -90,9 +90,9 @@ class TestOWASPJuiceShop(unittest.TestCase):
         # 
          
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
+        packet = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
                   
-        self.assertNotEqual(x.result, True)
+        self.assertNotEqual(packet, True)
 
     def test_improper_input_validation(self):
         url = "http://localhost:3000"
