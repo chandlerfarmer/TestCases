@@ -26,7 +26,6 @@ def handle_packet(packet): # Checks if the packet payload contains the credentia
         try:
             payload = packet.load # Check if the packet has a payload
             if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
-                print("capturing packet")
                 result = True
                 return result # Packet Contains Clear Text
             
@@ -105,22 +104,13 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 200)
 
     def test_cleartext_transmission(self):
+
+        # 
          
-        url = "http://localhost:3000"
-        email = "admin@juice-sh.op"
-        password = "admin123"
-        payload = {
-            "email": email,
-            "password": password
-        }
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-       # x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
-        requests.post(url+"/rest/user/login", data=payload)
-        x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
-   
-        #self.assertNotEqual(handle_packet.result, True)
+        sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
                   
-     
+        self.assertNotEqual(handle_packet.result, True)
 
     def test_improper_input_validation(self):
         url = "http://localhost:3000"
