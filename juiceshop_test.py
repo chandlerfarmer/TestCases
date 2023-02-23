@@ -119,6 +119,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         test.start()
         print("STILL IN MAIN")
         print("AGAIN IN MAIN")
+        test.join()
        # requests.post(url+"/rest/user/login", data=payload)
    
         #self.assertNotEqual(handle_packet.result, True)
