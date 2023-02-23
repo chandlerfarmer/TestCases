@@ -6,6 +6,18 @@ import threading
 import time
 
 
+def login_thread():
+    url = "http://localhost:3000/rest/user/login"
+    payload = {
+        "email": "admin@juice-sh.op",
+        "password": "admin123"
+    }
+    response = requests.post(url, data=payload)
+    if response.status_code == 200:
+        print("Login successful!")
+    else:
+        print("Login failed.")
+
 def capture_packets():
         handle_packet(self)
 
@@ -79,7 +91,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "testert2es2terteasfse@test.com",
+            "email": "testermrtest@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -103,6 +115,8 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
         x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
+        login_thread = threading.Thread(target=login_thread)
+        login_thread.start()
        # requests.post(url+"/rest/user/login", data=payload)
    
         #self.assertNotEqual(handle_packet.result, True)
