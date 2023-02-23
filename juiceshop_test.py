@@ -6,23 +6,8 @@ import threading
 import time
 
 
-
-def makeRequest():
-    time.sleep(2)
-    url = "http://localhost:3000"
-    email = "admin@juice-sh.op"
-    password = "admin123"
-    payload = {
-        "email": email,
-        "password": password
-    }
-    requests.post(url+"/rest/user/login", data=payload)
-    print("made Request")
-
-
 def capture_packets():
-        filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        sniff(iface="lo", filter= filter_expression, prn=handle_packet, count=2) 
+        handle_packet(self)
 
 
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
@@ -35,7 +20,7 @@ def handle_packet(packet): # Checks if the packet payload contains the credentia
             
         except AttributeError: # Packet doesn't contain a payload
             print('No Payload Found')
-        return
+        return False
 
 
 class TestOWASPJuiceShop(unittest.TestCase):
@@ -94,7 +79,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "testertes2terteasfse@test.com",
+            "email": "testert2es2terteasfse@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -108,7 +93,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
         self.assertNotEqual(response.status_code, 200)
 
     def test_cleartext_transmission(self):
-        result = False
          
         url = "http://localhost:3000"
         email = "admin@juice-sh.op"
@@ -118,19 +102,10 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        packets = sniff(iface="docker0", filter=filter_expression, count=1) # filter= filter_expression
-        print(packet.show())
-        print("FUCK ME 1")
+        x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet)
         requests.post(url+"/rest/user/login", data=payload)
-        for packet in packets:
-             print("FUCK ME 2")
-             print(packet.show())
-             if packet.haslayer(Raw):
-                if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
-                    print("capturing packet")
-                    result = True   
-                
-        self.assertNotEqual(result, True)
+   
+        self.assertNotEqual(handle_packet.result, True)
                   
      
 
