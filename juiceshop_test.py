@@ -91,7 +91,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "testermrtest@test.com",
+            "email": "testerm2rtest@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -115,8 +115,9 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
         x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
-        login_thread = threading.Thread(target=login_thread)
-        login_thread.start()
+        test = threading.Thread(target=login_thread)
+        test.start()
+        test.join()
        # requests.post(url+"/rest/user/login", data=payload)
    
         #self.assertNotEqual(handle_packet.result, True)
