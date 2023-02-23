@@ -106,7 +106,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
         response = requests.post(url, data=payload)
         response.close()
-        self.assertNotEqual(response.status_code, 201)
+        self.assertNotEqual(response.status_code, 200)
 
     #def test_cleartext_transmission(self):
 
@@ -140,8 +140,9 @@ class TestOWASPJuiceShop(unittest.TestCase):
         adminHeaders = {
              "Authorization": "Bearer " + adminToken,
         }
-
-        response = requests.put(url+f"/api/BasketItems/1", headers=adminHeaders, json={"quantity": -10})
+        response = requests.post(url+f"/api/BasketItems/", headers=adminHeaders, json={"BasketId": "1", "ProductId": 1, "quantity": 1})
+        iD = response.json()['data']['id']
+        response = requests.put(url+"/api/BasketItems/"+iD, headers=adminHeaders, json={"quantity": -10})
         self.assertNotEqual(response.status_code, 200)
 
 
