@@ -95,7 +95,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "test202222222222222222222022222@test.com",
+            "email": "test20222222222222222222222022222@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -142,7 +142,8 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
         response = requests.post(url+f"/api/BasketItems/", headers=adminHeaders, data={"BasketId": "1", "ProductId": 1, "quantity": 1})
         json_data = response.json()
-        id_value = json_data['data']['id']
+        id_value = json_data['status']
+        print(id_value)
 
         response = requests.put(url+f"/api/BasketItems/{id_value}", headers=adminHeaders, json={"quantity": -10})
         self.assertNotEqual(response.status_code, 200)
