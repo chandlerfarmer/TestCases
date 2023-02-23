@@ -14,7 +14,7 @@ def login_thread():
     }
     response = requests.post(url, data=payload)
     if response.status_code == 200:
-        print("Login successful!")
+        print("Login successful!", flush=True)
     else:
         print("Login failed.")
 
@@ -117,7 +117,6 @@ class TestOWASPJuiceShop(unittest.TestCase):
         x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
         test = threading.Thread(target=login_thread)
         test.start()
-        test.join()
        # requests.post(url+"/rest/user/login", data=payload)
    
         #self.assertNotEqual(handle_packet.result, True)
