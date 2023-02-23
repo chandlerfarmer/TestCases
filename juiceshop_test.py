@@ -2,24 +2,6 @@ import unittest # Used to execute the unit tests
 import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
-import threading
-import time
-
-
-def login_thread():
-    url = "http://localhost:3000/rest/user/login"
-    payload = {
-        "email": "admin@juice-sh.op",
-        "password": "admin123"
-    }
-    response = requests.post(url, data=payload)
-    if response.status_code == 200:
-        print("Login successful!", flush=True)
-    else:
-        print("Login failed.")
-
-def capture_packets():
-        handle_packet(self)
 
 
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
@@ -108,9 +90,9 @@ class TestOWASPJuiceShop(unittest.TestCase):
         # 
          
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
+        x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
                   
-        self.assertNotEqual(handle_packet.result, True)
+        self.assertNotEqual(x.result, True)
 
     def test_improper_input_validation(self):
         url = "http://localhost:3000"
