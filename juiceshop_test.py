@@ -94,7 +94,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "testertesterteasfse@test.com",
+            "email": "testertes2terteasfse@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -119,9 +119,12 @@ class TestOWASPJuiceShop(unittest.TestCase):
         }
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
         packets = sniff(iface="docker0", filter=filter_expression, count=1) # filter= filter_expression
-
+        print(packet.show())
+        print("FUCK ME 1")
         requests.post(url+"/rest/user/login", data=payload)
         for packet in packets:
+             print("FUCK ME 2")
+             print(packet.show())
              if packet.haslayer(Raw):
                 if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
                     print("capturing packet")
