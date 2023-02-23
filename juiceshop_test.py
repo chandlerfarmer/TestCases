@@ -72,7 +72,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "testerm2rtfasfest@test.com",
+            "email": "testerm22rtfasfest@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -82,8 +82,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
             }
         }
         response = requests.post(url, data=payload)
-        response.close()
-        self.assertNotEqual(response.status_code, 200)
+        self.assertNotEqual(response.status_code, 201)
 
     """
     THIS TEST CASE DOESN'T WORK HOWEVER IF YOU MANUALLY ENTER CREDENTIALS IN BROWSER THE "handle_packet" FUNCTION CONFIRMS THEY'RE BEING CAPTURED.
