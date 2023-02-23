@@ -3,7 +3,7 @@ import requests # Used for HTTP & API Calls
 from scapy.all import *
 import json
 
-
+# I HAD BEEN USING THIS FUNCTION TO ATTEMPT TO CAPTURE PACKETS IN THE 1 TEST-CASE THAT WOULDNT RUN
 def handle_packet(packet): # Checks if the packet payload contains the credentials in clear text 
         try:
             payload = packet.load # Check if the packet has a payload
@@ -72,7 +72,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "testerm22rtfasfest@test.com",
+            "email": "testertester@gmail.com", # This Must be Changed Each Time the Script is ran!
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
