@@ -117,6 +117,8 @@ class TestOWASPJuiceShop(unittest.TestCase):
         x = sniff(iface="docker0", filter=filter_expression, prn=handle_packet, count=1)
         test = threading.Thread(target=login_thread)
         test.start()
+        print("STILL IN MAIN")
+        print("AGAIN IN MAIN")
        # requests.post(url+"/rest/user/login", data=payload)
    
         #self.assertNotEqual(handle_packet.result, True)
