@@ -94,7 +94,7 @@ class TestOWASPJuiceShop(unittest.TestCase):
     def test_weak_password_requirements(self):
         url = "http://localhost:3000/api/Users/"
         payload = { # Payload for a new unique user (must change each run)
-            "email": "teste1r91229@test.com",
+            "email": "teste1r921229@test.com",
             "password": "12345",
             "passwordRepeat": "12345",
             "securityAnswer": "mom",
@@ -118,23 +118,18 @@ class TestOWASPJuiceShop(unittest.TestCase):
             "password": password
         }
         filter_expression = "tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x504f5354" # HTTP POST METHOD
-        packets = sniff(iface="lo") # filter= filter_expression
+        packets = sniff(iface="lo", filter=filter_expression) # filter= filter_expression
+
+        requests.post(url+"/rest/user/login", data=payload)
         for packet in packets:
-             print(packet.summary())
-
-       # requests.post(url+"/rest/user/login", data=payload)
-        
-       # for packet in packets:
-            # if packet.haslayer(Raw):
-               #   if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
-               #     print("capturing packet")
-               #     result = True
-            
-                  
-
-
-      #  time.sleep(1)
-      #  self.assertNotEqual(result, True)
+             if packet.haslayer(Raw):
+                if b"admin@juice-sh.op" and b"admin123" in payload: # Check if the credentials are in the payload
+                    print("capturing packet")
+                    result = True
+                    
+        sniff(filter=filter_expression, stop_filter=stop_capture)    
+                
+        self.assertNotEqual(result, True)
                   
      
 
